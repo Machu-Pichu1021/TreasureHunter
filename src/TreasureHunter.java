@@ -50,6 +50,15 @@ public class TreasureHunter {
 
         System.out.print("Hard mode? (y/n): ");
         String hard = SCANNER.nextLine().toLowerCase();
+        if (hard.equals("test")) {
+            System.out.println("Test mode activated.");
+            hunter = new Hunter(name, 105);
+            hunter.buyItem("water", 1);
+            hunter.buyItem("rope", 1);
+            hunter.buyItem("machete", 1);
+            hunter.buyItem("horse", 1);
+            hunter.buyItem("boat", 1);
+        }
         if (hard.equals("y")) {
             hardMode = true;
         }
