@@ -52,13 +52,14 @@ public class TreasureHunter {
         String hard = SCANNER.nextLine().toLowerCase();
         if (hard.equals("test")) {
             System.out.println("Test mode activated.");
-            hunter = new Hunter(name, 105);
+            hunter = new Hunter(name, 107);
             hunter.buyItem("water", 1);
             hunter.buyItem("rope", 1);
             hunter.buyItem("machete", 1);
             hunter.buyItem("boots", 1);
             hunter.buyItem("horse", 1);
             hunter.buyItem("boat", 1);
+            hunter.buyItem("shovel", 1);
         }
         if (hard.equals(("test lose"))) {
             System.out.println("Test Lose activated.");
@@ -128,6 +129,7 @@ public class TreasureHunter {
             System.out.println("(E)xplore surrounding terrain.");
             System.out.println("(M)ove on to a different town.");
             System.out.println("(L)ook for trouble!");
+            System.out.println("(D)ig for gold");
             System.out.println("Give up the hunt and e(X)it.");
             System.out.println();
             System.out.print("What's your next move? ");
@@ -153,10 +155,13 @@ public class TreasureHunter {
             }
         } else if (choice.equals("l")) {
             currentTown.lookForTrouble();
+        } else if (choice.equals("d")) {
+            currentTown.digForGold();
         } else if (choice.equals("x")) {
             System.out.println("Fare thee well, " + hunter.getHunterName() + "!");
         } else {
             System.out.println("Yikes! That's an invalid option! Try again.");
         }
+
     }
 }
