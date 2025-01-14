@@ -59,6 +59,11 @@ public class TreasureHunter {
             hunter.buyItem("horse", 1);
             hunter.buyItem("boat", 1);
         }
+        if (hard.equals(("test lose"))) {
+            System.out.println("Test Lose activated.");
+            hunter = new Hunter(name, 0);
+            hardMode = true;
+        }
         if (hard.equals("y")) {
             hardMode = true;
         }
@@ -105,6 +110,15 @@ public class TreasureHunter {
         while (!choice.equals("x")) {
             System.out.println();
             System.out.println(currentTown.getLatestNews());
+
+            //Check for loss
+            if (hunter.getGold() < 0) {
+                System.out.println();
+                System.out.println(Colors.RED + "GAME OVER" + Colors.RESET);
+                System.out.println("You ran out out gold!");
+                break;
+            }
+
             System.out.println("***");
             System.out.println(hunter.infoString());
             System.out.println(currentTown.infoString());
