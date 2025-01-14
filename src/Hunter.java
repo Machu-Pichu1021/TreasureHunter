@@ -127,14 +127,13 @@ public class Hunter {
      */
     public String getInventory() {
         String printableKit = "";
-        String space = " ";
 
         for (String item : kit) {
             if (item != null) {
-                printableKit += item + space;
+                printableKit += item + ", ";
             }
         }
-        return printableKit;
+        return printableKit.substring(0, printableKit.length() - 2);
     }
 
     /**
