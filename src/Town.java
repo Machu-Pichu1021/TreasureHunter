@@ -71,10 +71,10 @@ public class Town {
             return true;
         }
         if (terrain.getNeededItem().equals("boots")) {
-            printMessage = "You can't leave town, " + hunter.getHunterName() + ". You don't have " + terrain.getNeededItem() + ".";
+            printMessage = "You can't leave town, " + hunter.getHunterName() + ". You don't have " + Colors.PURPLE + terrain.getNeededItem() + Colors.RESET + ".";
         }
         else{
-            printMessage = "You can't leave town, " + hunter.getHunterName() + ". You don't have a " + terrain.getNeededItem() + ".";
+            printMessage = "You can't leave town, " + hunter.getHunterName() + ". You don't have a " + Colors.PURPLE + terrain.getNeededItem() + Colors.RESET + ".";
         }
         return false;
     }
@@ -128,18 +128,16 @@ public class Town {
      */
     private Terrain getNewTerrain() {
         double rnd = Math.random();
-        if (rnd < 1.0/6) {
+        if (rnd < .2) {
             return new Terrain("Mountains", "Rope");
-        } else if (rnd < 2.0/6) {
+        } else if (rnd < .4) {
             return new Terrain("Ocean", "Boat");
-        } else if (rnd < 3.0/6) {
+        } else if (rnd < .6) {
             return new Terrain("Plains", "Horse");
-        } else if (rnd < 4.0/6) {
-            return new Terrain("Desert", "Water");
-        } else if (rnd < 5.0/6) {
+        } else if (rnd < .8) {
             return new Terrain("Desert", "Water");
         } else {
-            return new Terrain("Marsh", "Boots");
+            return new Terrain("Jungle", "Machete");
         }
     }
 
