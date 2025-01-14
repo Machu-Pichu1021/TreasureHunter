@@ -11,11 +11,14 @@ import java.util.Scanner;
 public class TreasureHunter {
     // static variables
     private static final Scanner SCANNER = new Scanner(System.in);
+    private static final int STARTING_GOLD = 20;
 
     // instance variables
     private Town currentTown;
     private Hunter hunter;
+
     private boolean hardMode;
+    private boolean easyMode;
 
     /**
      * Constructs the Treasure Hunter game.
@@ -46,11 +49,15 @@ public class TreasureHunter {
         String name = SCANNER.nextLine().toLowerCase();
 
         // set hunter instance variable
-        hunter = new Hunter(name, 20);
+        hunter = new Hunter(name, STARTING_GOLD);
 
-        System.out.print("Hard mode? (y/n): ");
-        String hard = SCANNER.nextLine().toLowerCase();
-        if (hard.equals("test")) {
+        System.out.println("(E)asy");
+        System.out.println("(N)ormal");
+        System.out.println("(H)ard");
+        System.out.print("Choose your difficulty: ");
+
+        String diff = SCANNER.nextLine().toLowerCase();
+        if (diff.equals("test")) {
             System.out.println("Test mode activated.");
             hunter = new Hunter(name, 107);
             hunter.buyItem("water", 1);
@@ -61,13 +68,25 @@ public class TreasureHunter {
             hunter.buyItem("boat", 1);
             hunter.buyItem("shovel", 1);
         }
-        if (hard.equals(("test lose"))) {
+        else if (diff.equals(("test lose"))) {
             System.out.println("Test Lose activated.");
             hunter = new Hunter(name, 0);
             hardMode = true;
         }
-        if (hard.equals("y")) {
+        else if (diff.equals("h")) {
+            System.out.println(Colors.RED + "Hard Mode it is then. Prepare for a challenge." + Colors.RESET);
             hardMode = true;
+        }
+        else if (diff.equals("n")) {
+            System.out.println(Colors.YELLOW + "Normal Mode. Good luck adventurer." + Colors.RESET);
+        }
+        else if (diff.equals("e")) {
+            System.out.println(Colors.GREEN + "Easy Mode. This be your first time?" + Colors.RESET);
+            hunter = new Hunter(name, STARTING_GOLD * 2);
+            easyMode = true;
+        }
+        else {
+            System.out.println("Uhhh... I'm just gonna give you " + Colors.YELLOW + "Normal Mode..." + Colors.RESET);
         }
     }
 
@@ -77,12 +96,16 @@ public class TreasureHunter {
     private void enterTown() {
         double markdown = 0.25;
         double toughness = 0.4;
+        double breakChance = 0.5;
         if (hardMode) {
-            // in hard mode, you get less money back when you sell items
             markdown = 0.5;
-
-            // and the town is "tougher"
             toughness = 0.75;
+            breakChance = 0.65;
+        }
+        else if (easyMode) {
+            markdown = 1;
+            toughness = 0.2;
+            breakChance = 0;
         }
 
         // note that we don't need to access the Shop object
@@ -93,7 +116,7 @@ public class TreasureHunter {
         // creating the new Town -- which we need to store as an instance
         // variable in this class, since we need to access the Town
         // object in other methods of this class
-        currentTown = new Town(shop, toughness);
+        currentTown = new Town(shop, toughness, breakChance);
 
         // calling the hunterArrives method, which takes the Hunter
         // as a parameter; note this also could have been done in the

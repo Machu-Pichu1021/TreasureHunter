@@ -11,7 +11,9 @@ public class Town {
     private Terrain terrain;
     private String printMessage;
     private boolean toughTown;
+    private double toughness;
     private boolean dug;
+    private double breakChance;
 
     /**
      * The Town Constructor takes in a shop and the surrounding terrain, but leaves the hunter as null until one arrives.
@@ -19,7 +21,7 @@ public class Town {
      * @param shop The town's shoppe.
      * @param toughness The surrounding terrain.
      */
-    public Town(Shop shop, double toughness) {
+    public Town(Shop shop, double toughness, double breakChance) {
         this.shop = shop;
         this.terrain = getNewTerrain();
 
@@ -29,7 +31,10 @@ public class Town {
         printMessage = "";
 
         // higher toughness = more likely to be a tough town
-        toughTown = (Math.random() < toughness);
+        toughTown = Math.random() < toughness;
+        this.toughness = toughness;
+
+        this.breakChance = breakChance;
 
         dug = false;
     }
@@ -100,17 +105,20 @@ public class Town {
      */
     public void lookForTrouble() {
         double noTroubleChance;
+        double fightDifficulty;
         if (toughTown) {
-            noTroubleChance = 0.66;
+            noTroubleChance = 0.7;
+            fightDifficulty = toughness;
         } else {
-            noTroubleChance = 0.33;
+            noTroubleChance = 0.4;
+            fightDifficulty = 0.8 * toughness;
         }
         if (Math.random() > noTroubleChance) {
             printMessage = "You couldn't find any trouble";
         } else {
             printMessage = Colors.RED + "You want trouble, stranger!  You got it!\nOof! Umph! Ow!\n" + Colors.RESET;
             int goldDiff = (int) (Math.random() * 10) + 1;
-            if (Math.random() > noTroubleChance) {
+            if (Math.random() > fightDifficulty) {
                 printMessage += "Okay, stranger! You proved yer mettle. Here, take my gold.";
                 printMessage += "\nYou won the brawl and received " + Colors.YELLOW + goldDiff + " gold." + Colors.RESET;
                 hunter.changeGold(goldDiff);
@@ -180,7 +188,6 @@ public class Town {
      * @return true if the item broke.
      */
     private boolean checkItemBreak() {
-        double rand = Math.random();
-        return (rand < 0.5);
+        return Math.random() < breakChance;
     }
 }
