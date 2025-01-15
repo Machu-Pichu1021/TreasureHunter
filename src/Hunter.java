@@ -146,6 +146,12 @@ public class Hunter {
         if (!kitIsEmpty()) {
             str += " and " + Colors.PURPLE + getInventory() + Colors.RESET;
         }
+        if (!treasureInventoryIsEmpty()){
+            str += "\nTreasure Collected: " + getTreasureInventory();
+        }
+        else{
+            str += "\nTreasure Collected: none";
+        }
         return str;
     }
 
@@ -218,5 +224,25 @@ public class Hunter {
             }
         }
         return false;
+    }
+
+    public String getTreasureInventory() {
+        String printableTreasureInventory = "";
+
+        for (String item : treasureInventory) {
+            if (item != null) {
+                printableTreasureInventory += item + ", ";
+            }
+        }
+        return printableTreasureInventory.substring(0, printableTreasureInventory.length() - 2);
+    }
+
+    private boolean treasureInventoryIsEmpty() {
+        for (String string : treasureInventory) {
+            if (string != null) {
+                return false;
+            }
+        }
+        return true;
     }
 }
