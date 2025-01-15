@@ -133,6 +133,12 @@ public class TreasureHunter {
     private void showMenu() {
         String choice = "";
         while (!choice.equals("x")) {
+            if (hunter.emptyPositionInTreasureInventory()==-1) {
+                System.out.println();
+                System.out.println(Colors.BLUE + "You Win!" + Colors.RESET);
+                System.out.println("You found all 3 treasures!");
+                break;
+            }
             System.out.println();
             System.out.println(currentTown.getLatestNews());
 

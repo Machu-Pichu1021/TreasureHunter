@@ -207,7 +207,7 @@ public class Hunter {
         }
     }
 
-    private int emptyPositionInTreasureInventory() {
+    public int emptyPositionInTreasureInventory() {
         for (int i = 0; i < treasureInventory.length; i++) {
             if (treasureInventory[i] == null) {
                 return i;
