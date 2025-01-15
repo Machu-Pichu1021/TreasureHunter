@@ -147,10 +147,10 @@ public class Hunter {
             str += " and " + Colors.PURPLE + getInventory() + Colors.RESET;
         }
         if (!treasureInventoryIsEmpty()){
-            str += "\nTreasure Collected: " + getTreasureInventory();
+            str += "\nTreasure Collected: " + Colors.BLUE + getTreasureInventory() + Colors.RESET;
         }
         else{
-            str += "\nTreasure Collected: none";
+            str += "\nTreasure Collected: None";
         }
         return str;
     }
@@ -219,7 +219,6 @@ public class Hunter {
     public boolean hasItemInTreasureInventory(String item) {
         for (String tmpItem : treasureInventory) {
             if (item.equals(tmpItem)) {
-                // early return
                 return true;
             }
         }

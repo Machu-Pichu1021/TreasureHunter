@@ -52,7 +52,7 @@ public class Shop {
             if (cost == 0) {
                 System.out.println("We ain't got none of those.");
             } else {
-                System.out.print("It'll cost you " + cost + " gold. Buy it (y/n)? ");
+                System.out.print("It'll cost you " + Colors.YELLOW + cost + " gold" + Colors.RESET + ". Buy it (y/n)? ");
                 String option = SCANNER.nextLine().toLowerCase();
                 if (option.equals("y")) {
                     buyItem(item);
@@ -60,13 +60,13 @@ public class Shop {
             }
         } else {
             System.out.println("What're you lookin' to sell? ");
-            System.out.println("You currently have the following items: " + customer.getInventory());
+            System.out.println("You currently have the following items: " + Colors.PURPLE + customer.getInventory() + Colors.RESET);
             String item = SCANNER.nextLine().toLowerCase();
             int cost = checkMarketPrice(item, false);
             if (cost == 0) {
                 System.out.println("We don't want none of those.");
             } else {
-                System.out.print("It'll get you " + cost + " gold. Sell it (y/n)? ");
+                System.out.print("It'll get you " + Colors.YELLOW + cost + " gold" + Colors.RESET + ". Sell it (y/n)? ");
                 String option = SCANNER.nextLine().toLowerCase();
                 if (option.equals("y")) {
                     sellItem(item);
@@ -83,13 +83,13 @@ public class Shop {
      * @return the string representing the shop's items available for purchase and their prices.
      */
     public String inventory() {
-        String str = "Water: " + WATER_COST + " gold\n";
-        str += "Rope: " + ROPE_COST + " gold\n";
-        str += "Machete: " + MACHETE_COST + " gold\n";
-        str += "Boots: " + BOOTS_COST + " gold\n";
-        str += "Shovel: " + SHOVEL_COST + " gold\n";
-        str += "Horse: " + HORSE_COST + " gold\n";
-        str += "Boat: " + BOAT_COST + " gold\n";
+        String str = Colors.PURPLE + "Water: " + Colors.YELLOW + WATER_COST + " gold\n" + Colors.RESET;
+        str += Colors.PURPLE + "Rope: " + Colors.YELLOW + ROPE_COST + " gold\n" + Colors.RESET;
+        str += Colors.PURPLE + "Machete: " + Colors.YELLOW + MACHETE_COST + " gold\n" + Colors.RESET;
+        str += Colors.PURPLE + "Boots: " + Colors.YELLOW + BOOTS_COST + " gold\n" + Colors.RESET;
+        str += Colors.PURPLE + "Shovel: " + Colors.YELLOW + SHOVEL_COST + " gold\n" + Colors.RESET;
+        str += Colors.PURPLE + "Horse: " + Colors.YELLOW + HORSE_COST + " gold\n" + Colors.RESET;
+        str += Colors.PURPLE + "Boat: " + Colors.YELLOW + BOAT_COST + " gold\n" + Colors.RESET;
         return str;
     }
 
@@ -101,7 +101,7 @@ public class Shop {
     public void buyItem(String item) {
         int costOfItem = checkMarketPrice(item, true);
         if (customer.buyItem(item, costOfItem)) {
-            System.out.println("Ye' got yerself a " + item + ". Come again soon.");
+            System.out.println("Ye' got yerself a " + Colors.PURPLE + item + Colors.RESET + ". Come again soon.");
         } else {
             System.out.println("Hmm, either you don't have enough gold or you've already got one of those!");
         }

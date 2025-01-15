@@ -28,11 +28,11 @@ public class Town {
         this.shop = shop;
         this.terrain = getNewTerrain();
         randomTreasure = Math.random();
-        if (randomTreasure<.25){
+        if (randomTreasure < .25){
             treasure = "a crown";
-        } else if (randomTreasure<.5){
+        } else if (randomTreasure < .5){
             treasure = "a gem";
-        } else if (randomTreasure<.75){
+        } else if (randomTreasure < .75){
             treasure = "a trophy";
         } else {
             treasure = "dust";
@@ -87,7 +87,7 @@ public class Town {
             printMessage = "You used your " + item + " to cross the " + terrain.getTerrainName() + ".";
             if (checkItemBreak()) {
                 hunter.removeItemFromKit(item);
-                printMessage += "\nUnfortunately, your " + item + " broke.";
+                printMessage += "\nUnfortunately, you lost your " + Colors.PURPLE + item + Colors.RESET + ".";
             }
             return true;
         }
@@ -146,12 +146,13 @@ public class Town {
     public void huntForTreasure() {
         if(!alreadySearched) {
             if (!treasure.equals("dust")) {
+                System.out.println("You found " +  Colors.BLUE + treasure + Colors.RESET + "!");
                 if (!hunter.hasItemInTreasureInventory(treasure)) {
                     hunter.addTreasure(treasure);
-                    System.out.println("You found " + treasure + "!");
+                    System.out.println("You add it to your collection.");
                 }
                 else {
-                    System.out.println("You have already collected this treasure!");
+                    System.out.println("It seems you already have that treasure. You decide to leave this one here for the next adventurer.");
                 }
             }
             else {
