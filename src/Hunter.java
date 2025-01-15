@@ -1,7 +1,7 @@
 /**
  * Hunter Class<br /><br />
  * This class represents the treasure hunter character (the player) in the Treasure Hunt game.
- * This code has been adapted from Ivan Turner's original program -- thank you Mr. Turner!
+ * This code has been adapted from Ivan Turner's original program -- thank you, Mr. Turner!
  */
 
 public class Hunter {
@@ -17,11 +17,14 @@ public class Hunter {
      * @param hunterName The hunter's name.
      * @param startingGold The gold the hunter starts with.
      */
-    public Hunter(String hunterName, int startingGold) {
+    public Hunter(String hunterName, int startingGold, boolean samurai) {
         this.hunterName = hunterName;
         kit = new String[7];
         treasureInventory = new String[3];
         gold = startingGold;
+        if (samurai) {
+            kit = new String[8];
+        }
     }
 
     //Accessors
@@ -50,7 +53,7 @@ public class Hunter {
      * @return true if the item is successfully bought.
      */
     public boolean buyItem(String item, int costOfItem) {
-        if (costOfItem == 0 || gold < costOfItem || hasItemInKit(item)) {
+        if (costOfItem == -1 || gold < costOfItem || hasItemInKit(item)) {
             return false;
         }
         gold -= costOfItem;
@@ -132,7 +135,10 @@ public class Hunter {
 
         for (String item : kit) {
             if (item != null) {
-                printableKit += item + ", ";
+                if (item.equals("katana"))
+                    printableKit += Colors.RED + item + Colors.RESET + ", ";
+                else
+                    printableKit += Colors.PURPLE + item + Colors.RESET + ", ";
             }
         }
         return printableKit.substring(0, printableKit.length() - 2);
@@ -144,7 +150,7 @@ public class Hunter {
     public String infoString() {
         String str = hunterName + " has " + Colors.YELLOW  + gold  + " gold" + Colors.RESET;
         if (!kitIsEmpty()) {
-            str += " and " + Colors.PURPLE + getInventory() + Colors.RESET;
+            str += " and " + getInventory();
         }
         if (!treasureInventoryIsEmpty()){
             str += "\nTreasure Collected: " + Colors.BLUE + getTreasureInventory() + Colors.RESET;

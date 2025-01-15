@@ -7,6 +7,7 @@ public class Terrain {
     // instance variables
     private String terrainName;
     private String neededItem;
+    private String secondaryItem;
 
     /**
      * Sets the class member variables
@@ -17,6 +18,12 @@ public class Terrain {
     public Terrain(String name, String item) {
         terrainName = name;
         neededItem = item.toLowerCase();
+        secondaryItem = null;
+    }
+    public Terrain(String name, String item, String altItem) {
+        terrainName = name;
+        neededItem = item.toLowerCase();
+        secondaryItem = altItem.toLowerCase();
     }
 
     // accessors
@@ -28,6 +35,10 @@ public class Terrain {
         return neededItem;
     }
 
+    public String getSecondaryItem() {
+        return secondaryItem;
+    }
+
     /**
      * Guards against a hunter crossing the zone without the proper item.
      * Searches the hunter's inventory for the proper item and determines whether the hunter can cross.
@@ -36,7 +47,7 @@ public class Terrain {
      * @return true if the Hunter has the proper item.
      */
     public boolean canCrossTerrain(Hunter hunter) {
-        if (hunter.hasItemInKit(neededItem)) {
+        if (hunter.hasItemInKit(neededItem) || hunter.hasItemInKit(secondaryItem)) {
             return true;
         }
         return false;
@@ -46,6 +57,7 @@ public class Terrain {
      * @return A string representation of the terrain and item to cross it.
      */
     public String infoString() {
-        return "You are surrounded by " + Colors.CYAN + terrainName + Colors.RESET + " which needs a(n) " + neededItem + " to cross.";
+        return "You are surrounded by " + Colors.CYAN + terrainName + Colors.RESET + " which needs a(n) " + Colors.PURPLE +
+                neededItem + Colors.RESET + " to cross.";
     }
 }

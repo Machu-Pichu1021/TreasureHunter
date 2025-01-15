@@ -5,7 +5,7 @@ import java.util.Scanner;
  * It handles the display of the menu and the processing of the player's choices.<p>
  * It handles all the display based on the messages it receives from the Town object. <p>
  *
- * This code has been adapted from Ivan Turner's original program -- thank you Mr. Turner!
+ * This code has been adapted from Ivan Turner's original program -- thank you, Mr. Turner!
  */
 
 public class TreasureHunter {
@@ -19,6 +19,7 @@ public class TreasureHunter {
 
     private boolean hardMode;
     private boolean easyMode;
+    private boolean samurai;
 
     /**
      * Constructs the Treasure Hunter game.
@@ -49,7 +50,7 @@ public class TreasureHunter {
         String name = SCANNER.nextLine().toLowerCase();
 
         // set hunter instance variable
-        hunter = new Hunter(name, STARTING_GOLD);
+        hunter = new Hunter(name, STARTING_GOLD, false);
 
         System.out.println("(E)asy");
         System.out.println("(N)ormal");
@@ -59,19 +60,25 @@ public class TreasureHunter {
         String diff = SCANNER.nextLine().toLowerCase();
         if (diff.equals("test")) {
             System.out.println("Test mode activated.");
-            hunter = new Hunter(name, 107);
-            hunter.buyItem("water", 1);
-            hunter.buyItem("rope", 1);
-            hunter.buyItem("machete", 1);
-            hunter.buyItem("boots", 1);
-            hunter.buyItem("horse", 1);
-            hunter.buyItem("boat", 1);
-            hunter.buyItem("shovel", 1);
+            hunter = new Hunter(name, 100, false);
+            hunter.buyItem("water", 0);
+            hunter.buyItem("rope", 0);
+            hunter.buyItem("machete", 0);
+            hunter.buyItem("boots", 0);
+            hunter.buyItem("horse", 0);
+            hunter.buyItem("boat", 0);
+            hunter.buyItem("shovel", 0);
         }
         else if (diff.equals(("test lose"))) {
             System.out.println("Test Lose activated.");
-            hunter = new Hunter(name, 0);
+            hunter = new Hunter(name, 0, false);
             hardMode = true;
+        }
+        else if (diff.equals("s")) {
+            System.out.println("Hello, Samurai. It is an honor to see you.");
+            samurai = true;
+            hardMode = true;
+            hunter = new Hunter(name, 20, true);
         }
         else if (diff.equals("h")) {
             System.out.println(Colors.RED + "Hard Mode it is then. Prepare for a challenge." + Colors.RESET);
@@ -82,7 +89,7 @@ public class TreasureHunter {
         }
         else if (diff.equals("e")) {
             System.out.println(Colors.GREEN + "Easy Mode. This be your first time?" + Colors.RESET);
-            hunter = new Hunter(name, STARTING_GOLD * 2);
+            hunter = new Hunter(name, STARTING_GOLD * 2, false);
             easyMode = true;
         }
         else {
@@ -111,7 +118,7 @@ public class TreasureHunter {
         // note that we don't need to access the Shop object
         // outside of this method, so it isn't necessary to store it as an instance
         // variable; we can leave it as a local variable
-        Shop shop = new Shop(markdown);
+        Shop shop = new Shop(markdown, samurai);
 
         // creating the new Town -- which we need to store as an instance
         // variable in this class, since we need to access the Town
@@ -147,7 +154,7 @@ public class TreasureHunter {
             if (hunter.getGold() < 0) {
                 System.out.println();
                 System.out.println(Colors.RED + "GAME OVER" + Colors.RESET);
-                System.out.println("You ran out out gold!");
+                System.out.println("You ran out of gold!");
                 break;
             }
 

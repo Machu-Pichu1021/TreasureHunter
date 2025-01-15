@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class Shop {
     // constants
+    private static final int KATANA_COST = 0;
     private static final int WATER_COST = 2;
     private static final int ROPE_COST = 4;
     private static final int MACHETE_COST = 6;
@@ -22,14 +23,16 @@ public class Shop {
     // instance variables
     private double markdown;
     private Hunter customer;
+    private boolean isSamurai;
 
     /**
      * The Shop constructor takes in a markdown value and leaves customer null until one enters the shop.
      *
      * @param markdown Percentage of markdown for selling items in decimal format.
      */
-    public Shop(double markdown) {
+    public Shop(double markdown, boolean samurai) {
         this.markdown = markdown;
+        isSamurai = samurai;
         customer = null; // customer is set in the enter method
     }
 
@@ -49,7 +52,7 @@ public class Shop {
             System.out.print("What're you lookin' to buy? ");
             String item = SCANNER.nextLine().toLowerCase();
             int cost = checkMarketPrice(item, true);
-            if (cost == 0) {
+            if (cost == -1) {
                 System.out.println("We ain't got none of those.");
             } else {
                 System.out.print("It'll cost you " + Colors.YELLOW + cost + " gold" + Colors.RESET + ". Buy it (y/n)? ");
@@ -60,10 +63,10 @@ public class Shop {
             }
         } else {
             System.out.println("What're you lookin' to sell? ");
-            System.out.println("You currently have the following items: " + Colors.PURPLE + customer.getInventory() + Colors.RESET);
+            System.out.println("You currently have the following items: " + customer.getInventory());
             String item = SCANNER.nextLine().toLowerCase();
             int cost = checkMarketPrice(item, false);
-            if (cost == 0) {
+            if (cost == -1) {
                 System.out.println("We don't want none of those.");
             } else {
                 System.out.print("It'll get you " + Colors.YELLOW + cost + " gold" + Colors.RESET + ". Sell it (y/n)? ");
@@ -83,7 +86,11 @@ public class Shop {
      * @return the string representing the shop's items available for purchase and their prices.
      */
     public String inventory() {
-        String str = Colors.PURPLE + "Water: " + Colors.YELLOW + WATER_COST + " gold\n" + Colors.RESET;
+        String str = "";
+        if (isSamurai) {
+            str += Colors.RED + "KATANA: " + Colors.YELLOW + KATANA_COST + " gold\n" + Colors.RESET;
+        }
+        str += Colors.PURPLE + "Water: " + Colors.YELLOW + WATER_COST + " gold\n" + Colors.RESET;
         str += Colors.PURPLE + "Rope: " + Colors.YELLOW + ROPE_COST + " gold\n" + Colors.RESET;
         str += Colors.PURPLE + "Machete: " + Colors.YELLOW + MACHETE_COST + " gold\n" + Colors.RESET;
         str += Colors.PURPLE + "Boots: " + Colors.YELLOW + BOOTS_COST + " gold\n" + Colors.RESET;
@@ -101,9 +108,29 @@ public class Shop {
     public void buyItem(String item) {
         int costOfItem = checkMarketPrice(item, true);
         if (customer.buyItem(item, costOfItem)) {
-            System.out.println("Ye' got yerself a " + Colors.PURPLE + item + Colors.RESET + ". Come again soon.");
+            if (customer.hasItemInKit("katana")) {
+                System.out.println("Nice " + Colors.RED + "katana" + Colors.RESET + " you have there sir... Just this once I can " +
+                        "give you the " + Colors.PURPLE + item + Colors.RESET + " for free. Just don't start swinging...");
+                customer.changeGold(costOfItem);
+            }
+            else {
+                System.out.println("Ye' got yerself a " + Colors.PURPLE + item + Colors.RESET + ". Come again soon.");
+            }
         } else {
-            System.out.println("Hmm, either you don't have enough gold or you've already got one of those!");
+            if (customer.getGold() < costOfItem) {
+                if (customer.hasItemInKit("katana")) {
+                    System.out.println("It seems you don't have enough gold for that. B-but your " + Colors.RED + "katana" +
+                            Colors.RESET + " looks mighty frightening, just take the " + Colors.PURPLE + item + Colors.RESET +
+                            " and don't hurt me!");
+                    customer.buyItem(item, 0);
+                }
+                else {
+                    System.out.println("I'm afraid you don't have enough gold, come back when you're a little, mmmm richer.");
+                }
+            }
+            else {
+                System.out.println("It seems you already have a " + Colors.PURPLE + item + Colors.RESET + ".");
+            }
         }
     }
 
@@ -140,7 +167,7 @@ public class Shop {
      * Checks the item entered against the costs listed in the static variables.
      *
      * @param item The item being checked for cost.
-     * @return The cost of the item or 0 if the item is not found.
+     * @return The cost of the item or -1 if the item is not found.
      */
     public int getCostOfItem(String item) {
         if (item.equals("water")) {
@@ -157,10 +184,11 @@ public class Shop {
             return HORSE_COST;
         } else if (item.equals("boat")) {
             return BOAT_COST;
+        } else if (item.equals("katana") && isSamurai) {
+            return KATANA_COST;
         } else {
-            return 0;
+            return -1;
         }
-
     }
 
     /**
