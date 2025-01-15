@@ -14,6 +14,9 @@ public class Town {
     private double toughness;
     private boolean dug;
     private double breakChance;
+    private boolean alreadySearched;
+    private String treasure;
+    private double randomTreasure;
 
     /**
      * The Town Constructor takes in a shop and the surrounding terrain, but leaves the hunter as null until one arrives.
@@ -24,6 +27,16 @@ public class Town {
     public Town(Shop shop, double toughness, double breakChance) {
         this.shop = shop;
         this.terrain = getNewTerrain();
+        randomTreasure = Math.random();
+        if (randomTreasure<.25){
+            treasure = "a crown";
+        } else if (randomTreasure<.5){
+            treasure = "a gem";
+        } else if (randomTreasure<.75){
+            treasure = "a trophy";
+        } else {
+            treasure = "dust";
+        }
 
         // the hunter gets set using the hunterArrives method, which
         // gets called from a client class
@@ -35,7 +48,7 @@ public class Town {
         this.toughness = toughness;
 
         this.breakChance = breakChance;
-
+        alreadySearched = false;
         dug = false;
     }
 
@@ -130,6 +143,26 @@ public class Town {
         }
     }
 
+    public void huntForTreasure() {
+        if(!alreadySearched) {
+            if (!treasure.equals("dust")) {
+                if (!hunter.hasItemInTreasureInventory(treasure)) {
+                    hunter.addTreasure(treasure);
+                    System.out.println("You found " + treasure + "!");
+                }
+                else {
+                    System.out.println("You have already collected this treasure!");
+                }
+            }
+            else {
+                System.out.println("All you could find was dust.");
+            }
+            alreadySearched = true;
+        }
+        else {
+            System.out.println("You have already searched this town!");
+        }
+    }
     /**
      * Lets the hunter dig for gold. <br>
      * If they have a shovel, it's a 50/50 change to find nothing or for 1-20 gold <br>
