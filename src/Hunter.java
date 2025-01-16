@@ -216,6 +216,9 @@ public class Hunter {
     }
 
     public boolean hasItemInTreasureInventory(String item) {
+        if (item == null)
+            return false;
+
         for (String tmpItem : treasureInventory) {
             if (item.equals(tmpItem))
                 return true;
