@@ -1,7 +1,7 @@
 /**
  * The Town Class is where it all happens.
  * The Town is designed to manage all the things a Hunter can do in town.
- * This code has been adapted from Ivan Turner's original program -- thank you Mr. Turner!
+ * This code has been adapted from Ivan Turner's original program -- thank you, Mr. Turner!
  */
 
 public class Town {
@@ -92,7 +92,7 @@ public class Town {
         if (canLeaveTown) {
             String item = terrain.getNeededItem();
             String altItem = terrain.getSecondaryItem();
-            if (altItem != null && altItem.equals("katana")) {
+            if (altItem != null && altItem.equals("katana") && hunter.hasItemInKit("katana")) {
                 printMessage = "You expertly slice your way through the dense bamboo of the " + Colors.CYAN + terrain.getTerrainName()
                         + Colors.RESET + " with your " + Colors.RED + "katana" + Colors.RESET + ".";
                 return true;
