@@ -104,7 +104,7 @@ public class Town {
             }
             return true;
         }
-        if (terrain.getNeededItem().equals("boots")) {
+        if (terrain.getNeededItem().equals("boots") || terrain.getNeededItem().equals("water")) {
             printMessage = "You can't leave town, " + hunter.getHunterName() + ". You don't have " + Colors.PURPLE +
                     terrain.getNeededItem() + Colors.RESET + ".";
         }
