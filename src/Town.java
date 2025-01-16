@@ -169,7 +169,7 @@ public class Town {
         printMessage = "";
         if (!alreadySearched) {
             if (!treasure.equals("dust")) {
-                printMessage += "You found " +  Colors.BLUE + treasure + Colors.RESET + "!";
+                printMessage += "You found " +  Colors.BLUE + treasure + Colors.RESET + "! ";
                 if (!hunter.hasItemInTreasureInventory(treasure)) {
                     hunter.addTreasure(treasure);
                     printMessage += "You add it to your collection.";
