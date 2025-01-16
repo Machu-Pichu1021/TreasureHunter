@@ -34,16 +34,16 @@ public class Town {
     public Town(Shop shop, double toughness, double breakChance) {
         this.shop = shop;
         this.terrain = getNewTerrain();
+
         randomTreasure = Math.random();
-        if (randomTreasure < .25){
+        if (randomTreasure < .25)
             treasure = "a crown";
-        } else if (randomTreasure < .5){
+        else if (randomTreasure < .5)
             treasure = "a gem";
-        } else if (randomTreasure < .75){
+        else if (randomTreasure < .75)
             treasure = "a trophy";
-        } else {
+        else
             treasure = "dust";
-        }
 
         // the hunter gets set using the hunterArrives method, which
         // gets called from a client class
@@ -76,11 +76,10 @@ public class Town {
     public void hunterArrives(Hunter hunter) {
         this.hunter = hunter;
         printMessage = "Welcome to town, " + hunter.getHunterName() + ".";
-        if (toughTown) {
+        if (toughTown)
             printMessage += "\nIt's pretty rough around here, so watch yourself.";
-        } else {
+        else
             printMessage += "\nWe're just a sleepy little town with mild mannered folk.";
-        }
     }
 
     /**
@@ -109,7 +108,7 @@ public class Town {
             printMessage = "You can't leave town, " + hunter.getHunterName() + ". You don't have " + Colors.PURPLE +
                     terrain.getNeededItem() + Colors.RESET + ".";
         }
-        else{
+        else {
             printMessage = "You can't leave town, " + hunter.getHunterName() + ". You don't have a " + Colors.PURPLE +
                     terrain.getNeededItem() + Colors.RESET + ".";
         }
@@ -140,9 +139,9 @@ public class Town {
             noTroubleChance = 0.7;
             fightDifficulty = 0.8 * toughness;
         }
-        if (Math.random() < noTroubleChance) {
+        if (Math.random() < noTroubleChance)
             printMessage = "You couldn't find any trouble";
-        } else {
+        else {
             int goldDiff = (int) (Math.random() * 10) + 1;
             if (hunter.hasItemInKit("katana")) {
                 printMessage = Colors.RED + "You want trouble, stranger?! You g-" + Colors.RESET + "\n";
@@ -167,26 +166,25 @@ public class Town {
     }
 
     public void huntForTreasure() {
-        if(!alreadySearched) {
+        printMessage = "";
+        if (!alreadySearched) {
             if (!treasure.equals("dust")) {
-                System.out.println("You found " +  Colors.BLUE + treasure + Colors.RESET + "!");
+                printMessage += "You found " +  Colors.BLUE + treasure + Colors.RESET + "!";
                 if (!hunter.hasItemInTreasureInventory(treasure)) {
                     hunter.addTreasure(treasure);
-                    System.out.println("You add it to your collection.");
+                    printMessage += "You add it to your collection.";
                 }
-                else {
-                    System.out.println("It seems you already have that treasure. You decide to leave this one here for the next adventurer.");
-                }
+                else
+                    printMessage += "It seems you already have that treasure. You decide to leave this one here for the next adventurer.";
             }
-            else {
-                System.out.println("All you could find was dust.");
-            }
+            else
+                printMessage += "All you could find was dust.";
             alreadySearched = true;
         }
-        else {
-            System.out.println("You have already searched this town!");
-        }
+        else
+            printMessage += "You have already searched this town!";
     }
+
     /**
      * Lets the hunter dig for gold. <br>
      * If they have a shovel, it's a 50/50 change to find nothing or for 1-20 gold <br>
@@ -210,9 +208,8 @@ public class Town {
                 printMessage += "You dug up " + Colors.YELLOW + goldDug + " gold" + Colors.RESET + "!";
             }
         }
-        else {
+        else
             printMessage += "You can't dig for gold without a " + Colors.PURPLE + "shovel" + Colors.RESET + ".";
-        }
     }
 
     public String infoString() {
@@ -226,17 +223,16 @@ public class Town {
      */
     private Terrain getNewTerrain() {
         double rnd = Math.random();
-        if (rnd < .2) {
+        if (rnd < .2)
             return new Terrain("Mountains", "Rope");
-        } else if (rnd < .4) {
+        else if (rnd < .4)
             return new Terrain("Ocean", "Boat");
-        } else if (rnd < .6) {
+        else if (rnd < .6)
             return new Terrain("Plains", "Horse");
-        } else if (rnd < .8) {
+        else if (rnd < .8)
             return new Terrain("Desert", "Water");
-        } else {
+        else
             return new Terrain("Jungle", "Machete", "Katana");
-        }
     }
 
     /**

@@ -1,6 +1,6 @@
 /**
  * The Terrain class is designed to represent the zones between the towns in the Treasure Hunter game.
- * This code has been adapted from Ivan Turner's original program -- thank you Mr. Turner!
+ * This code has been adapted from Ivan Turner's original program -- thank you, Mr. Turner!
  */
 
 public class Terrain {
@@ -47,10 +47,7 @@ public class Terrain {
      * @return true if the Hunter has the proper item.
      */
     public boolean canCrossTerrain(Hunter hunter) {
-        if (hunter.hasItemInKit(neededItem) || hunter.hasItemInKit(secondaryItem)) {
-            return true;
-        }
-        return false;
+        return hunter.hasItemInKit(neededItem) || hunter.hasItemInKit(secondaryItem);
     }
 
     /**

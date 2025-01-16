@@ -58,42 +58,41 @@ public class TreasureHunter {
         System.out.print("Choose your difficulty: ");
 
         String diff = SCANNER.nextLine().toLowerCase();
-        if (diff.equals("test")) {
-            System.out.println("Test mode activated.");
-            hunter = new Hunter(name, 100, false);
-            hunter.buyItem("water", 0);
-            hunter.buyItem("rope", 0);
-            hunter.buyItem("machete", 0);
-            hunter.buyItem("boots", 0);
-            hunter.buyItem("horse", 0);
-            hunter.buyItem("boat", 0);
-            hunter.buyItem("shovel", 0);
-        }
-        else if (diff.equals(("test lose"))) {
-            System.out.println("Test Lose activated.");
-            hunter = new Hunter(name, 0, false);
-            hardMode = true;
-        }
-        else if (diff.equals("s")) {
-            System.out.println("Hello, Samurai. It is an honor to see you.");
-            samurai = true;
-            hardMode = true;
-            hunter = new Hunter(name, 20, true);
-        }
-        else if (diff.equals("h")) {
-            System.out.println(Colors.RED + "Hard Mode it is then. Prepare for a challenge." + Colors.RESET);
-            hardMode = true;
-        }
-        else if (diff.equals("n")) {
-            System.out.println(Colors.YELLOW + "Normal Mode. Good luck adventurer." + Colors.RESET);
-        }
-        else if (diff.equals("e")) {
-            System.out.println(Colors.GREEN + "Easy Mode. This be your first time?" + Colors.RESET);
-            hunter = new Hunter(name, STARTING_GOLD * 2, false);
-            easyMode = true;
-        }
-        else {
-            System.out.println("Uhhh... I'm just gonna give you " + Colors.YELLOW + "Normal Mode..." + Colors.RESET);
+        switch (diff) {
+            case "test" -> {
+                System.out.println("Test mode activated.");
+                hunter = new Hunter(name, 100, false);
+                hunter.buyItem("water", 0);
+                hunter.buyItem("rope", 0);
+                hunter.buyItem("machete", 0);
+                hunter.buyItem("boots", 0);
+                hunter.buyItem("horse", 0);
+                hunter.buyItem("boat", 0);
+                hunter.buyItem("shovel", 0);
+            }
+            case ("test lose") -> {
+                System.out.println("Test Lose activated.");
+                hunter = new Hunter(name, 0, false);
+                hardMode = true;
+            }
+            case "s" -> {
+                System.out.println("Hello, Samurai. It is an honor to see you.");
+                samurai = true;
+                hardMode = true;
+                hunter = new Hunter(name, 20, true);
+            }
+            case "h" -> {
+                System.out.println(Colors.RED + "Hard Mode it is then. Prepare for a challenge." + Colors.RESET);
+                hardMode = true;
+            }
+            case "n" -> System.out.println(Colors.YELLOW + "Normal Mode. Good luck adventurer." + Colors.RESET);
+            case "e" -> {
+                System.out.println(Colors.GREEN + "Easy Mode. This be your first time?" + Colors.RESET);
+                hunter = new Hunter(name, STARTING_GOLD * 2, false);
+                easyMode = true;
+            }
+            default ->
+                    System.out.println("Uhhh... I'm just gonna give you " + Colors.YELLOW + "Normal Mode..." + Colors.RESET);
         }
     }
 
@@ -115,20 +114,10 @@ public class TreasureHunter {
             breakChance = 0;
         }
 
-        // note that we don't need to access the Shop object
-        // outside of this method, so it isn't necessary to store it as an instance
-        // variable; we can leave it as a local variable
         Shop shop = new Shop(markdown, samurai);
 
-        // creating the new Town -- which we need to store as an instance
-        // variable in this class, since we need to access the Town
-        // object in other methods of this class
         currentTown = new Town(shop, toughness, breakChance);
 
-        // calling the hunterArrives method, which takes the Hunter
-        // as a parameter; note this also could have been done in the
-        // constructor for Town, but this illustrates another way to associate
-        // an object with an object of a different class
         currentTown.hunterArrives(hunter);
     }
 
@@ -181,27 +170,21 @@ public class TreasureHunter {
      * @param choice The action to process.
      */
     private void processChoice(String choice) {
-        if (choice.equals("b") || choice.equals("s")) {
-            currentTown.enterShop(choice);
-        } else if (choice.equals("e")) {
-            System.out.println(currentTown.getTerrain().infoString());
-        } else if (choice.equals("m")) {
-            if (currentTown.leaveTown()) {
-                // This town is going away so print its news ahead of time.
-                System.out.println(currentTown.getLatestNews());
-                enterTown();
+        switch (choice) {
+            case "b", "s" -> currentTown.enterShop(choice);
+            case "e" -> System.out.println(currentTown.getTerrain().infoString());
+            case "m" -> {
+                if (currentTown.leaveTown()) {
+                    // This town is going away so print its news ahead of time.
+                    System.out.println(currentTown.getLatestNews());
+                    enterTown();
+                }
             }
-        } else if (choice.equals("l")) {
-            currentTown.lookForTrouble();
-        } else if (choice.equals("h")) {
-            currentTown.huntForTreasure();
-        } else if (choice.equals("d")) {
-            currentTown.digForGold();
-        } else if (choice.equals("x")) {
-            System.out.println("Fare thee well, " + hunter.getHunterName() + "!");
-        } else {
-            System.out.println("Yikes! That's an invalid option! Try again.");
+            case "l" -> currentTown.lookForTrouble();
+            case "h" -> currentTown.huntForTreasure();
+            case "d" -> currentTown.digForGold();
+            case "x" -> System.out.println("Fare thee well, " + hunter.getHunterName() + "!");
+            default -> System.out.println("Yikes! That's an invalid option! Try again.");
         }
-
     }
 }

@@ -52,28 +52,26 @@ public class Shop {
             System.out.print("What're you lookin' to buy? ");
             String item = SCANNER.nextLine().toLowerCase();
             int cost = checkMarketPrice(item, true);
-            if (cost == -1) {
+            if (cost == -1)
                 System.out.println("We ain't got none of those.");
-            } else {
+            else {
                 System.out.print("It'll cost you " + Colors.YELLOW + cost + " gold" + Colors.RESET + ". Buy it (y/n)? ");
                 String option = SCANNER.nextLine().toLowerCase();
-                if (option.equals("y")) {
+                if (option.equals("y"))
                     buyItem(item);
-                }
             }
         } else {
             System.out.println("What're you lookin' to sell? ");
             System.out.println("You currently have the following items: " + customer.getInventory());
             String item = SCANNER.nextLine().toLowerCase();
             int cost = checkMarketPrice(item, false);
-            if (cost == -1) {
+            if (cost == -1)
                 System.out.println("We don't want none of those.");
-            } else {
+            else {
                 System.out.print("It'll get you " + Colors.YELLOW + cost + " gold" + Colors.RESET + ". Sell it (y/n)? ");
                 String option = SCANNER.nextLine().toLowerCase();
-                if (option.equals("y")) {
+                if (option.equals("y"))
                     sellItem(item);
-                }
             }
         }
         return "You left the shop";
@@ -87,9 +85,9 @@ public class Shop {
      */
     public String inventory() {
         String str = "";
-        if (isSamurai) {
+        if (isSamurai)
             str += Colors.RED + "KATANA: " + Colors.YELLOW + KATANA_COST + " gold\n" + Colors.RESET;
-        }
+
         str += Colors.PURPLE + "Water: " + Colors.YELLOW + WATER_COST + " gold\n" + Colors.RESET;
         str += Colors.PURPLE + "Rope: " + Colors.YELLOW + ROPE_COST + " gold\n" + Colors.RESET;
         str += Colors.PURPLE + "Machete: " + Colors.YELLOW + MACHETE_COST + " gold\n" + Colors.RESET;
@@ -113,9 +111,8 @@ public class Shop {
                         "give you the " + Colors.PURPLE + item + Colors.RESET + " for free. Just don't start swinging...");
                 customer.changeGold(costOfItem);
             }
-            else {
+            else
                 System.out.println("Ye' got yerself a " + Colors.PURPLE + item + Colors.RESET + ". Come again soon.");
-            }
         } else {
             if (customer.getGold() < costOfItem) {
                 if (customer.hasItemInKit("katana")) {
@@ -124,13 +121,11 @@ public class Shop {
                             " and don't hurt me!");
                     customer.buyItem(item, 0);
                 }
-                else {
+                else
                     System.out.println("I'm afraid you don't have enough gold, come back when you're a little, mmmm richer.");
-                }
             }
-            else {
+            else
                 System.out.println("It seems you already have a " + Colors.PURPLE + item + Colors.RESET + ".");
-            }
         }
     }
 
@@ -141,11 +136,10 @@ public class Shop {
      */
     public void sellItem(String item) {
         int buyBackPrice = checkMarketPrice(item, false);
-        if (customer.sellItem(item, buyBackPrice)) {
+        if (customer.sellItem(item, buyBackPrice))
             System.out.println("Pleasure doin' business with you.");
-        } else {
+        else
             System.out.println("Stop stringin' me along!");
-        }
     }
 
     /**
@@ -156,11 +150,7 @@ public class Shop {
      * @return The cost of buying or selling the item based on the isBuying parameter.
      */
     public int checkMarketPrice(String item, boolean isBuying) {
-        if (isBuying) {
-            return getCostOfItem(item);
-        } else {
-            return getBuyBackCost(item);
-        }
+        return isBuying ? getCostOfItem(item) : getBuyBackCost(item);
     }
 
     /**
@@ -170,25 +160,17 @@ public class Shop {
      * @return The cost of the item or -1 if the item is not found.
      */
     public int getCostOfItem(String item) {
-        if (item.equals("water")) {
-            return WATER_COST;
-        } else if (item.equals("rope")) {
-            return ROPE_COST;
-        } else if (item.equals("machete")) {
-            return MACHETE_COST;
-        } else if (item.equals("boots")) {
-            return BOOTS_COST;
-        } else if (item.equals("shovel")) {
-            return SHOVEL_COST;
-        } else if (item.equals("horse")) {
-            return HORSE_COST;
-        } else if (item.equals("boat")) {
-            return BOAT_COST;
-        } else if (item.equals("katana") && isSamurai) {
-            return KATANA_COST;
-        } else {
-            return -1;
-        }
+        return switch (item) {
+            case "water" -> WATER_COST;
+            case "rope" -> ROPE_COST;
+            case "machete" -> MACHETE_COST;
+            case "boots" -> BOOTS_COST;
+            case "shovel" -> SHOVEL_COST;
+            case "horse" -> HORSE_COST;
+            case "boat" -> BOAT_COST;
+            case "katana" -> isSamurai ? KATANA_COST : -1;
+            default -> -1;
+        };
     }
 
     /**
@@ -198,7 +180,6 @@ public class Shop {
      * @return The sell price of the item.
      */
     public int getBuyBackCost(String item) {
-        int cost = (int) (getCostOfItem(item) * markdown);
-        return cost;
+        return (int) (getCostOfItem(item) * markdown);
     }
 }

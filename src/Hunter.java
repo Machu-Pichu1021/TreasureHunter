@@ -19,12 +19,12 @@ public class Hunter {
      */
     public Hunter(String hunterName, int startingGold, boolean samurai) {
         this.hunterName = hunterName;
-        kit = new String[7];
         treasureInventory = new String[3];
         gold = startingGold;
-        if (samurai) {
+        if (samurai)
             kit = new String[8];
-        }
+        else
+            kit = new String[7];
     }
 
     //Accessors
@@ -53,9 +53,9 @@ public class Hunter {
      * @return true if the item is successfully bought.
      */
     public boolean buyItem(String item, int costOfItem) {
-        if (costOfItem == -1 || gold < costOfItem || hasItemInKit(item)) {
+        if (costOfItem == -1 || gold < costOfItem || hasItemInKit(item))
             return false;
-        }
+
         gold -= costOfItem;
         addItem(item);
         return true;
@@ -70,9 +70,9 @@ public class Hunter {
      * @return true if the item was successfully sold.
      */
     public boolean sellItem(String item, int buyBackPrice) {
-        if (buyBackPrice <= 0 || !hasItemInKit(item)) {
+        if (buyBackPrice <= 0 || !hasItemInKit(item))
             return false;
-        }
+
         gold += buyBackPrice;
         removeItemFromKit(item);
         return true;
@@ -87,9 +87,9 @@ public class Hunter {
         int itmIdx = findItemInKit(item);
 
         // if item is found
-        if (itmIdx >= 0) {
+        if (itmIdx >= 0)
             kit[itmIdx] = null;
-        }
+
     }
 
     /**
@@ -105,6 +105,7 @@ public class Hunter {
             kit[idx] = item;
             return true;
         }
+
         return false;
     }
 
@@ -116,10 +117,8 @@ public class Hunter {
      */
     public boolean hasItemInKit(String item) {
         for (String tmpItem : kit) {
-            if (item.equals(tmpItem)) {
-                // early return
+            if (item.equals(tmpItem))
                 return true;
-            }
         }
         return false;
     }
@@ -149,15 +148,14 @@ public class Hunter {
      */
     public String infoString() {
         String str = hunterName + " has " + Colors.YELLOW  + gold  + " gold" + Colors.RESET;
-        if (!kitIsEmpty()) {
+
+        if (!kitIsEmpty())
             str += " and " + getInventory();
-        }
-        if (!treasureInventoryIsEmpty()){
+        if (!treasureInventoryIsEmpty())
             str += "\nTreasure Collected: " + Colors.BLUE + getTreasureInventory() + Colors.RESET;
-        }
-        else{
+        else
             str += "\nTreasure Collected: None";
-        }
+
         return str;
     }
 
@@ -170,10 +168,8 @@ public class Hunter {
     private int findItemInKit(String item) {
         for (int i = 0; i < kit.length; i++) {
             String tmpItem = kit[i];
-
-            if (item.equals(tmpItem)) {
+            if (item.equals(tmpItem))
                 return i;
-            }
         }
         return -1;
     }
@@ -185,9 +181,8 @@ public class Hunter {
      */
     private boolean kitIsEmpty() {
         for (String string : kit) {
-            if (string != null) {
+            if (string != null)
                 return false;
-            }
         }
         return true;
     }
@@ -199,9 +194,8 @@ public class Hunter {
      */
     private int emptyPositionInKit() {
         for (int i = 0; i < kit.length; i++) {
-            if (kit[i] == null) {
+            if (kit[i] == null)
                 return i;
-            }
         }
         return -1;
     }
@@ -215,18 +209,16 @@ public class Hunter {
 
     public int emptyPositionInTreasureInventory() {
         for (int i = 0; i < treasureInventory.length; i++) {
-            if (treasureInventory[i] == null) {
+            if (treasureInventory[i] == null)
                 return i;
-            }
         }
         return -1;
     }
 
     public boolean hasItemInTreasureInventory(String item) {
         for (String tmpItem : treasureInventory) {
-            if (item.equals(tmpItem)) {
+            if (item.equals(tmpItem))
                 return true;
-            }
         }
         return false;
     }
@@ -235,18 +227,16 @@ public class Hunter {
         String printableTreasureInventory = "";
 
         for (String item : treasureInventory) {
-            if (item != null) {
+            if (item != null)
                 printableTreasureInventory += item + ", ";
-            }
         }
         return printableTreasureInventory.substring(0, printableTreasureInventory.length() - 2);
     }
 
     private boolean treasureInventoryIsEmpty() {
         for (String string : treasureInventory) {
-            if (string != null) {
+            if (string != null)
                 return false;
-            }
         }
         return true;
     }
