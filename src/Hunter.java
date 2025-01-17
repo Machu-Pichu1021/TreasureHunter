@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /**
  * Hunter Class<br /><br />
  * This class represents the treasure hunter character (the player) in the Treasure Hunt game.
@@ -5,6 +7,8 @@
  */
 
 public class Hunter {
+    private static OutputWindow WINDOW;
+
     //instance variables
     private String hunterName;
     private String[] kit;
@@ -17,7 +21,7 @@ public class Hunter {
      * @param hunterName The hunter's name.
      * @param startingGold The gold the hunter starts with.
      */
-    public Hunter(String hunterName, int startingGold, boolean samurai) {
+    public Hunter(String hunterName, int startingGold, boolean samurai, OutputWindow window) {
         this.hunterName = hunterName;
         treasureInventory = new String[3];
         gold = startingGold;
@@ -25,6 +29,8 @@ public class Hunter {
             kit = new String[8];
         else
             kit = new String[7];
+
+        WINDOW = window;
     }
 
     //Accessors
@@ -132,38 +138,34 @@ public class Hunter {
      *
      * @return The printable String representation of the inventory.
      */
-    public String getInventory() {
-        String printableKit = "";
-
-        if(kitIsEmpty()){
-            return "";
-        }
-
+    public void printInventory() {
         for (String item : kit) {
             if (item != null) {
                 if (item.equals("katana"))
-                    printableKit += Colors.RED + item + Colors.RESET + ", ";
+                    WINDOW.addTextToWindow(item, Color.red);
                 else
-                    printableKit += Colors.PURPLE + item + Colors.RESET + ", ";
+                    WINDOW.addTextToWindow(item, Color.pink);
+                WINDOW.addTextToWindow(", ", Color.white);
             }
         }
-        return printableKit.substring(0, printableKit.length() - 2);
     }
 
     /**
      * @return A string representation of the hunter.
      */
-    public String infoString() {
-        String str = hunterName + " has " + Colors.YELLOW  + gold  + " gold" + Colors.RESET;
-
-        if (!kitIsEmpty())
-            str += " and " + getInventory();
-        if (!treasureInventoryIsEmpty())
-            str += "\nTreasure Collected: " + Colors.BLUE + getTreasureInventory() + Colors.RESET;
+    public void infoString() {
+        WINDOW.addTextToWindow(hunterName + " has ", Color.white);
+        WINDOW.addTextToWindow(gold + " gold", Color.orange);
+        if (!kitIsEmpty()) {
+            WINDOW.addTextToWindow(" and ", Color.white);
+            printInventory();
+        }
+        if (!treasureInventoryIsEmpty()) {
+            WINDOW.addTextToWindow("\nTreasure Collected: ", Color.white);
+            printTreasureInventory();
+        }
         else
-            str += "\nTreasure Collected: None";
-
-        return str;
+            WINDOW.addTextToWindow("\nTreasure Collected: None", Color.white);
     }
 
     /**
@@ -233,14 +235,13 @@ public class Hunter {
         return false;
     }
 
-    public String getTreasureInventory() {
-        String printableTreasureInventory = "";
-
+    public void printTreasureInventory() {
         for (String item : treasureInventory) {
-            if (item != null)
-                printableTreasureInventory += item + ", ";
+            if (item != null) {
+                WINDOW.addTextToWindow(item, Color.blue);
+                WINDOW.addTextToWindow(", ", Color.white);
+            }
         }
-        return printableTreasureInventory.substring(0, printableTreasureInventory.length() - 2);
     }
 
     private boolean treasureInventoryIsEmpty() {

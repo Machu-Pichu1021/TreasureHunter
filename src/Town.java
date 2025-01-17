@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /**
  * The Town Class is where it all happens.
  * The Town is designed to manage all the things a Hunter can do in town.
@@ -5,6 +7,8 @@
  */
 
 public class Town {
+    private static OutputWindow WINDOW;
+
     // instance variables
     private Hunter hunter;
 
@@ -31,7 +35,7 @@ public class Town {
      * @param shop The town's shoppe.
      * @param toughness The surrounding terrain.
      */
-    public Town(Shop shop, double toughness, double breakChance) {
+    public Town(Shop shop, double toughness, double breakChance, OutputWindow window) {
         this.shop = shop;
         this.terrain = getNewTerrain();
 
@@ -58,6 +62,8 @@ public class Town {
 
         alreadySearched = false;
         dug = false;
+
+        WINDOW = window;
     }
 
     public Terrain getTerrain() {
@@ -75,11 +81,11 @@ public class Town {
      */
     public void hunterArrives(Hunter hunter) {
         this.hunter = hunter;
-        printMessage = "Welcome to town, " + hunter.getHunterName() + ".";
+        WINDOW.addTextToWindow("Welcome to town, " + hunter.getHunterName() + ".", Color.white);
         if (toughTown)
-            printMessage += "\nIt's pretty rough around here, so watch yourself.";
+            WINDOW.addTextToWindow("\nIt's pretty rough around here, so watch yourself.", Color.white);
         else
-            printMessage += "\nWe're just a sleepy little town with mild mannered folk.";
+            WINDOW.addTextToWindow("\nWe're just a sleepy little town with mild mannered folk.", Color.white);
     }
 
     /**
@@ -88,31 +94,42 @@ public class Town {
      * @return true if the Hunter was able to leave town.
      */
     public boolean leaveTown() {
-        printMessage = "";
+        WINDOW.clear();
         boolean canLeaveTown = terrain.canCrossTerrain(hunter);
         if (canLeaveTown) {
             String item = terrain.getNeededItem();
             String altItem = terrain.getSecondaryItem();
             if (altItem != null && altItem.equals("katana") && hunter.hasItemInKit("katana")) {
-                printMessage = "You expertly slice your way through the dense bamboo of the " + Colors.CYAN + terrain.getTerrainName()
-                        + Colors.RESET + " with your " + Colors.RED + "katana" + Colors.RESET + ".";
+                WINDOW.addTextToWindow("You expertly slice your way through the dense bamboo of the ", Color.white);
+                WINDOW.addTextToWindow(terrain.getTerrainName(), Color.cyan);
+                WINDOW.addTextToWindow(" with your ", Color.white);
+                WINDOW.addTextToWindow("katana", Color.red);
+                WINDOW.addTextToWindow(".\n", Color.white);
                 return true;
             }
-            printMessage = "You used your " + item + " to cross the " + Colors.CYAN + terrain.getTerrainName() + Colors.RESET + ".";
+            WINDOW.addTextToWindow("You used your ", Color.white);
+            WINDOW.addTextToWindow(item, Color.pink);
+            WINDOW.addTextToWindow(" to cross the ", Color.white);
+            WINDOW.addTextToWindow(terrain.getTerrainName(), Color.cyan);
+            WINDOW.addTextToWindow(".\n", Color.white);
             if (checkItemBreak()) {
                 hunter.removeItemFromKit(item);
-                printMessage += "\nUnfortunately, you lost your " + Colors.PURPLE + item + Colors.RESET + ".";
+                WINDOW.addTextToWindow("Unfortunately, you lose your ", Color.white);
+                WINDOW.addTextToWindow(item, Color.pink);
+                WINDOW.addTextToWindow("when travelling the ", Color.white);
+                WINDOW.addTextToWindow(terrain.getTerrainName(), Color.cyan);
+                WINDOW.addTextToWindow(".\n", Color.white);
             }
             return true;
         }
-        if (terrain.getNeededItem().equals("boots") || terrain.getNeededItem().equals("water")) {
-            printMessage = "You can't leave town, " + hunter.getHunterName() + ". You don't have " + Colors.PURPLE +
-                    terrain.getNeededItem() + Colors.RESET + ".";
-        }
-        else {
-            printMessage = "You can't leave town, " + hunter.getHunterName() + ". You don't have a " + Colors.PURPLE +
-                    terrain.getNeededItem() + Colors.RESET + ".";
-        }
+
+        WINDOW.addTextToWindow("You can't leave town, " + hunter.getHunterName() + ".", Color.white);
+        if (terrain.getNeededItem().equals("boots") || terrain.getNeededItem().equals("water"))
+            WINDOW.addTextToWindow(" You don't have ", Color.white);
+        else
+            WINDOW.addTextToWindow(" You don't have a ", Color.white);
+        WINDOW.addTextToWindow(terrain.getNeededItem(), Color.pink);
+        WINDOW.addTextToWindow(".", Color.white);
         return false;
     }
 
@@ -122,7 +139,7 @@ public class Town {
      * @param choice If the user wants to buy or sell items at the shop.
      */
     public void enterShop(String choice) {
-        printMessage = shop.enter(hunter, choice);
+        shop.enter(hunter, choice);
     }
 
     /**
@@ -131,7 +148,7 @@ public class Town {
      * The tougher the town, the easier it is to find a fight, and the harder it is to win one.
      */
     public void lookForTrouble() {
-        printMessage = "";
+        WINDOW.clear();
         double noTroubleChance;
         double fightDifficulty;
         if (toughTown) {
@@ -142,25 +159,32 @@ public class Town {
             fightDifficulty = 0.8 * toughness;
         }
         if (Math.random() < noTroubleChance)
-            printMessage = "You couldn't find any trouble";
+            WINDOW.addTextToWindow("You couldn't find any trouble\n", Color.white);
         else {
             int goldDiff = (int) (Math.random() * 10) + 1;
             if (hunter.hasItemInKit("katana")) {
-                printMessage = Colors.RED + "You want trouble, stranger?! You g-" + Colors.RESET + "\n";
-                printMessage += Colors.BLUE + "Oh my god that's a " + Colors.RED + "katana" + Colors.BLUE + ".";
-                printMessage += " Yeah nope I'm out. I am NOT fighting a samurai. Just take my gold man.\n" + Colors.RESET;
-                printMessage += "That was... interesting. Well, at least you got " + Colors.YELLOW + goldDiff + " gold" + Colors.RESET + ".";
+                WINDOW.addTextToWindow("You want trouble, stranger?! You g-\n", Color.white);
+                WINDOW.addTextToWindow("Oh my god that's a ", Color.blue);
+                WINDOW.addTextToWindow("katana", Color.red);
+                WINDOW.addTextToWindow(". Yeah nope I'm out. I am NOT fighting a samurai. Just take my gold man.\n", Color.BLUE);
+                WINDOW.addTextToWindow("That was... interesting. Well, at least you got ", Color.white);
+                WINDOW.addTextToWindow(goldDiff + " gold", Color.orange);
+                WINDOW.addTextToWindow(".", Color.white);
                 hunter.changeGold(goldDiff);
             }
             else {
-                printMessage = Colors.RED + "You want trouble, stranger?! You got it!\nOof! Umph! Ow!\n" + Colors.RESET;
+                WINDOW.addTextToWindow("You want trouble, stranger?! You got it!\nOof! Umph! Ow!\n", Color.red);
                 if (Math.random() > fightDifficulty) {
-                    printMessage += Colors.BLUE + "Okay, stranger! You proved yer mettle. Here, take my gold." + Colors.RESET;
-                    printMessage += "\nYou won the brawl and received " + Colors.YELLOW + goldDiff + " gold." + Colors.RESET;
+                    WINDOW.addTextToWindow("Okay, stranger! You proved yer mettle. Here, take my gold.\n", Color.blue);
+                    WINDOW.addTextToWindow("You won the brawl and received ", Color.white);
+                    WINDOW.addTextToWindow(goldDiff + " gold", Color.orange);
+                    WINDOW.addTextToWindow(".", Color.white);
                     hunter.changeGold(goldDiff);
                 } else {
-                    printMessage += Colors.RED + "That'll teach you to go lookin' fer trouble in MY town! Now pay up!" + Colors.RESET;
-                    printMessage += "\nYou lost the brawl and pay " + Colors.YELLOW + goldDiff + " gold." + Colors.RESET;
+                    WINDOW.addTextToWindow("That'll teach you to go lookin' fer trouble in MY town! Now pay up!\n", Color.red);
+                    WINDOW.addTextToWindow("You lost the brawl and pay ", Color.white);
+                    WINDOW.addTextToWindow(goldDiff + " gold", Color.white);
+                    WINDOW.addTextToWindow(".", Color.white);
                     hunter.changeGold(-goldDiff);
                 }
             }
@@ -214,9 +238,11 @@ public class Town {
             printMessage += "You can't dig for gold without a " + Colors.PURPLE + "shovel" + Colors.RESET + ".";
     }
 
-    public String infoString() {
+    public void infoString() {
         printMessage = "";
-        return "This nice little town is surrounded by " + terrain.getTerrainName() + ".";
+        WINDOW.addTextToWindow("This nice little town is surrounded by ", Color.white);
+        WINDOW.addTextToWindow(terrain.getTerrainName(), Color.cyan);
+        WINDOW.addTextToWindow(".", Color.white);
     }
 
     /**

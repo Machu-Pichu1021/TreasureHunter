@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.Scanner;
 
 /**
@@ -11,6 +12,8 @@ import java.util.Scanner;
 public class TreasureHunter {
     // static variables
     private static final Scanner SCANNER = new Scanner(System.in);
+    private static final OutputWindow WINDOW = new OutputWindow();
+
     private static final int STARTING_GOLD = 20;
 
     // instance variables
@@ -44,24 +47,26 @@ public class TreasureHunter {
      * Creates a hunter object at the beginning of the game and populates the class member variable with it.
      */
     private void welcomePlayer() {
-        System.out.println("Welcome to TREASURE HUNTER!");
-        System.out.println("Going hunting for the big treasure, eh?");
-        System.out.print("What's your name, Hunter? ");
+        WINDOW.addTextToWindow("Welcome to TREASURE HUNTER!\n", Color.white);
+        WINDOW.addTextToWindow("Going hunting for the big treasure, eh?\n", Color.white);
+        WINDOW.addTextToWindow("What's your name, Hunter?\n", Color.white);
         String name = SCANNER.nextLine().toLowerCase();
 
         // set hunter instance variable
-        hunter = new Hunter(name, STARTING_GOLD, false);
+        hunter = new Hunter(name, STARTING_GOLD, false, WINDOW);
 
-        System.out.println("(E)asy");
-        System.out.println("(N)ormal");
-        System.out.println("(H)ard");
-        System.out.print("Choose your difficulty: ");
+        WINDOW.clear();
+        WINDOW.addTextToWindow("(E)asy\n", Color.white);
+        WINDOW.addTextToWindow("(N)ormal\n", Color.white);
+        WINDOW.addTextToWindow("(H)ard\n", Color.white);
+        WINDOW.addTextToWindow("Choose your difficulty:", Color.white);
 
         String diff = SCANNER.nextLine().toLowerCase();
+        WINDOW.clear();
         switch (diff) {
             case "test" -> {
-                System.out.println("Test mode activated.");
-                hunter = new Hunter(name, 100, false);
+                WINDOW.addTextToWindow("Test mode activated.", Color.white);
+                hunter = new Hunter(name, 100, false, WINDOW);
                 hunter.buyItem("water", 0);
                 hunter.buyItem("rope", 0);
                 hunter.buyItem("machete", 0);
@@ -71,28 +76,28 @@ public class TreasureHunter {
                 hunter.buyItem("shovel", 0);
             }
             case ("test lose") -> {
-                System.out.println("Test Lose activated.");
-                hunter = new Hunter(name, 0, false);
+                WINDOW.addTextToWindow("Test Lose activated.", Color.white);
+                hunter = new Hunter(name, 0, false, WINDOW);
                 hardMode = true;
             }
             case "s" -> {
-                System.out.println("Hello, Samurai. It is an honor to see you.");
+                WINDOW.addTextToWindow("Hello, Samurai. It is an honor to see you.", Color.white);
                 samurai = true;
                 hardMode = true;
-                hunter = new Hunter(name, 20, true);
+                hunter = new Hunter(name, 20, true, WINDOW);
             }
             case "h" -> {
-                System.out.println(Colors.RED + "Hard Mode it is then. Prepare for a challenge." + Colors.RESET);
+                WINDOW.addTextToWindow("Hard Mode it is then. Prepare for a challenge.", Color.red);
                 hardMode = true;
             }
-            case "n" -> System.out.println(Colors.YELLOW + "Normal Mode. Good luck adventurer." + Colors.RESET);
+            case "n" -> WINDOW.addTextToWindow("Normal Mode. Good luck adventurer.", Color.orange);
             case "e" -> {
-                System.out.println(Colors.GREEN + "Easy Mode. This be your first time?" + Colors.RESET);
-                hunter = new Hunter(name, STARTING_GOLD * 2, false);
+                WINDOW.addTextToWindow("Easy Mode. This be your first time?", Color.green);
+                hunter = new Hunter(name, STARTING_GOLD * 2, false, WINDOW);
                 easyMode = true;
             }
             default ->
-                    System.out.println("Uhhh... I'm just gonna give you " + Colors.YELLOW + "Normal Mode..." + Colors.RESET);
+                    WINDOW.addTextToWindow("Uhhh... I'm just gonna give you Normal Mode...", Color.orange);
         }
     }
 
@@ -114,9 +119,9 @@ public class TreasureHunter {
             breakChance = 0;
         }
 
-        Shop shop = new Shop(markdown, samurai);
+        Shop shop = new Shop(markdown, samurai, WINDOW);
 
-        currentTown = new Town(shop, toughness, breakChance);
+        currentTown = new Town(shop, toughness, breakChance, WINDOW);
 
         currentTown.hunterArrives(hunter);
     }
@@ -130,36 +135,38 @@ public class TreasureHunter {
         String choice = "";
         while (!choice.equals("x")) {
 
+            //Check for win
             if (hunter.emptyPositionInTreasureInventory() == -1) {
-                System.out.println();
-                System.out.println(Colors.BLUE + "You Win!" + Colors.RESET);
-                System.out.println("You found all 3 treasures!");
+                WINDOW.addTextToWindow("\n", Color.white);
+                WINDOW.addTextToWindow("You Win!\n", Color.blue);
+                WINDOW.addTextToWindow("You found all 3 treasures!", Color.white);
                 break;
             }
-            System.out.println();
-            System.out.println(currentTown.getLatestNews());
+
+            WINDOW.addTextToWindow("\n", Color.white);
+            //System.out.println(currentTown.getLatestNews());
 
             //Check for loss
             if (hunter.getGold() < 0) {
-                System.out.println();
-                System.out.println(Colors.RED + "GAME OVER" + Colors.RESET);
-                System.out.println("You ran out of gold!");
+                WINDOW.addTextToWindow("\n", Color.white);
+                WINDOW.addTextToWindow("GAME OVER\n", Color.red);
+                WINDOW.addTextToWindow("You ran out of gold!", Color.white);
                 break;
             }
 
-            System.out.println("***");
-            System.out.println(hunter.infoString());
-            System.out.println(currentTown.infoString());
-            System.out.println("(B)uy something at the shop.");
-            System.out.println("(S)ell something at the shop.");
-            System.out.println("(E)xplore surrounding terrain.");
-            System.out.println("(M)ove on to a different town.");
-            System.out.println("(L)ook for trouble!");
-            System.out.println("(H)unt for treasure");
-            System.out.println("(D)ig for gold");
-            System.out.println("Give up the hunt and e(X)it.");
-            System.out.println();
-            System.out.print("What's your next move? ");
+            WINDOW.addTextToWindow("***\n", Color.white);
+            hunter.infoString();
+            currentTown.infoString();
+            WINDOW.addTextToWindow("(B)uy something at the shop.\n", Color.white);
+            WINDOW.addTextToWindow("(S)ell something at the shop.\n", Color.white);
+            WINDOW.addTextToWindow("(E)xplore surrounding terrain.\n", Color.white);
+            WINDOW.addTextToWindow("(M)ove on to a different town.\n", Color.white);
+            WINDOW.addTextToWindow("(L)ook for trouble!\n", Color.white);
+            WINDOW.addTextToWindow("(H)unt for treasure\n", Color.white);
+            WINDOW.addTextToWindow("(D)ig for gold\n", Color.white);
+            WINDOW.addTextToWindow("Give up the hunt and e(X)it.\n", Color.white);
+            WINDOW.addTextToWindow("\n", Color.white);
+            WINDOW.addTextToWindow("What's your next move?", Color.white);
             choice = SCANNER.nextLine().toLowerCase();
             processChoice(choice);
         }
@@ -176,15 +183,21 @@ public class TreasureHunter {
             case "m" -> {
                 if (currentTown.leaveTown()) {
                     // This town is going away so print its news ahead of time.
-                    System.out.println(currentTown.getLatestNews());
+                    //System.out.println(currentTown.getLatestNews());
                     enterTown();
                 }
             }
             case "l" -> currentTown.lookForTrouble();
             case "h" -> currentTown.huntForTreasure();
             case "d" -> currentTown.digForGold();
-            case "x" -> System.out.println("Fare thee well, " + hunter.getHunterName() + "!");
-            default -> System.out.println("Yikes! That's an invalid option! Try again.");
+            case "x" -> {
+                WINDOW.clear();
+                WINDOW.addTextToWindow("Fare thee well, " + hunter.getHunterName() + "!", Color.white);
+            }
+            default -> {
+                WINDOW.clear();
+                WINDOW.addTextToWindow("Yikes! That's an invalid option! Try again.\n\n", Color.white);
+            }
         }
     }
 }

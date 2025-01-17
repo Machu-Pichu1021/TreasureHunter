@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.Scanner;
 
 /**
@@ -19,6 +20,7 @@ public class Shop {
 
     // static variables
     private static final Scanner SCANNER = new Scanner(System.in);
+    private static OutputWindow WINDOW;
 
     // instance variables
     private double markdown;
@@ -30,10 +32,11 @@ public class Shop {
      *
      * @param markdown Percentage of markdown for selling items in decimal format.
      */
-    public Shop(double markdown, boolean samurai) {
+    public Shop(double markdown, boolean samurai, OutputWindow window) {
         this.markdown = markdown;
         isSamurai = samurai;
         customer = null; // customer is set in the enter method
+        WINDOW = window;
     }
 
     /**
@@ -43,38 +46,46 @@ public class Shop {
      * @param buyOrSell String that determines if hunter is "B"uying or "S"elling
      * @return a String to be used for printing in the latest news
      */
-    public String enter(Hunter hunter, String buyOrSell) {
+    public void enter(Hunter hunter, String buyOrSell) {
         customer = hunter;
         if (buyOrSell.equals("b")) {
-            System.out.println("Welcome to the shop! We have the finest wares in town.");
-            System.out.println("Currently we have the following items:");
-            System.out.println(inventory());
-            System.out.print("What're you lookin' to buy? ");
+            WINDOW.addTextToWindow("Welcome to the shop! We have the finest wares in town.\n", Color.white);
+            WINDOW.addTextToWindow("Currently we have the following items:\n", Color.white);
+            inventory();
+            WINDOW.addTextToWindow("What're you lookin' to buy?", Color.white);
             String item = SCANNER.nextLine().toLowerCase();
+            WINDOW.clear();
             int cost = checkMarketPrice(item, true);
             if (cost == -1)
-                System.out.println("We ain't got none of those.");
+                WINDOW.addTextToWindow("We ain't got none of those.\n", Color.white);
             else {
-                System.out.print("It'll cost you " + Colors.YELLOW + cost + " gold" + Colors.RESET + ". Buy it (y/n)? ");
+                WINDOW.addTextToWindow("It'll cost you ", Color.white);
+                WINDOW.addTextToWindow(cost + " gold", Color.orange);
+                WINDOW.addTextToWindow(". Buy it (y/n)?\n", Color.white);
                 String option = SCANNER.nextLine().toLowerCase();
                 if (option.equals("y"))
                     buyItem(item);
             }
         } else {
-            System.out.println("What're you lookin' to sell? ");
-            System.out.println("You currently have the following items: " + customer.getInventory());
+            WINDOW.addTextToWindow("What're you lookin' to sell?\n", Color.white);
+            WINDOW.addTextToWindow("You currently have the following items:\n", Color.white);
+            customer.printInventory();
+            WINDOW.addTextToWindow("\n", Color.white);
             String item = SCANNER.nextLine().toLowerCase();
             int cost = checkMarketPrice(item, false);
             if (cost == 0 || cost == -1)
-                System.out.println("We don't want none of those.");
+                WINDOW.addTextToWindow("We don't want none of those.\n", Color.white);
             else {
-                System.out.print("It'll get you " + Colors.YELLOW + cost + " gold" + Colors.RESET + ". Sell it (y/n)? ");
+                WINDOW.addTextToWindow("It'll get you ", Color.white);
+                WINDOW.addTextToWindow(cost + " gold", Color.orange);
+                WINDOW.addTextToWindow(". Sell it (y/n)?\n", Color.white);
                 String option = SCANNER.nextLine().toLowerCase();
                 if (option.equals("y"))
                     sellItem(item);
             }
         }
-        return "You left the shop";
+        WINDOW.clear();
+        WINDOW.addTextToWindow("You left the shop.\n", Color.white);
     }
 
     /**
@@ -83,19 +94,26 @@ public class Shop {
      *
      * @return the string representing the shop's items available for purchase and their prices.
      */
-    public String inventory() {
-        String str = "";
-        if (isSamurai)
-            str += Colors.RED + "KATANA: " + Colors.YELLOW + KATANA_COST + " gold\n" + Colors.RESET;
-
-        str += Colors.PURPLE + "Water: " + Colors.YELLOW + WATER_COST + " gold\n" + Colors.RESET;
-        str += Colors.PURPLE + "Rope: " + Colors.YELLOW + ROPE_COST + " gold\n" + Colors.RESET;
-        str += Colors.PURPLE + "Machete: " + Colors.YELLOW + MACHETE_COST + " gold\n" + Colors.RESET;
-        str += Colors.PURPLE + "Boots: " + Colors.YELLOW + BOOTS_COST + " gold\n" + Colors.RESET;
-        str += Colors.PURPLE + "Shovel: " + Colors.YELLOW + SHOVEL_COST + " gold\n" + Colors.RESET;
-        str += Colors.PURPLE + "Horse: " + Colors.YELLOW + HORSE_COST + " gold\n" + Colors.RESET;
-        str += Colors.PURPLE + "Boat: " + Colors.YELLOW + BOAT_COST + " gold\n" + Colors.RESET;
-        return str;
+    public void inventory() {
+        if (isSamurai) {
+            WINDOW.addTextToWindow("KATANA: ", Color.red);
+            WINDOW.addTextToWindow(KATANA_COST + " gold\n", Color.orange);
+        }
+        WINDOW.addTextToWindow("Water: ", Color.pink);
+        WINDOW.addTextToWindow(WATER_COST + " gold\n", Color.orange);
+        WINDOW.addTextToWindow("Rope: ", Color.pink);
+        WINDOW.addTextToWindow(ROPE_COST + " gold\n", Color.orange);
+        WINDOW.addTextToWindow("Machete: ", Color.pink);
+        WINDOW.addTextToWindow(MACHETE_COST + " gold\n", Color.orange);
+        WINDOW.addTextToWindow("Boots: ", Color.pink);
+        WINDOW.addTextToWindow(BOOTS_COST + " gold\n", Color.orange);
+        WINDOW.addTextToWindow("Shovel: ", Color.pink);
+        WINDOW.addTextToWindow(SHOVEL_COST + " gold\n", Color.orange);
+        WINDOW.addTextToWindow("Horse: ", Color.pink);
+        WINDOW.addTextToWindow(HORSE_COST + " gold\n", Color.orange);
+        WINDOW.addTextToWindow("Boat: ", Color.pink);
+        WINDOW.addTextToWindow(BOAT_COST + " gold\n", Color.orange);
+        WINDOW.addTextToWindow("\n", Color.white);
     }
 
     /**
@@ -107,25 +125,36 @@ public class Shop {
         int costOfItem = checkMarketPrice(item, true);
         if (customer.buyItem(item, costOfItem)) {
             if (customer.hasItemInKit("katana")) {
-                System.out.println("Nice " + Colors.RED + "katana" + Colors.RESET + " you have there sir... Just this once I can " +
-                        "give you the " + Colors.PURPLE + item + Colors.RESET + " for free. Just don't start swinging...");
+                WINDOW.addTextToWindow("Nice ", Color.white);
+                WINDOW.addTextToWindow("katana", Color.red);
+                WINDOW.addTextToWindow(" you have there sir... Just this once I can give you the ", Color.white);
+                WINDOW.addTextToWindow(item, Color.pink);
+                WINDOW.addTextToWindow(" for free. Just don't start swinging...\n", Color.white);
                 customer.changeGold(costOfItem);
             }
-            else
-                System.out.println("Ye' got yerself a " + Colors.PURPLE + item + Colors.RESET + ". Come again soon.");
+            else {
+                WINDOW.addTextToWindow("Ye' got yerself a ", Color.white);
+                WINDOW.addTextToWindow(item, Color.pink);
+                WINDOW.addTextToWindow(". Come again soon.\n", Color.white);
+            }
         } else {
             if (customer.getGold() < costOfItem) {
                 if (customer.hasItemInKit("katana")) {
-                    System.out.println("It seems you don't have enough gold for that. B-but your " + Colors.RED + "katana" +
-                            Colors.RESET + " looks mighty frightening, just take the " + Colors.PURPLE + item + Colors.RESET +
-                            " and don't hurt me!");
+                    WINDOW.addTextToWindow("It seems you don't have enough gold for that. B-but your ", Color.white);
+                    WINDOW.addTextToWindow("katana", Color.red);
+                    WINDOW.addTextToWindow(" looks mighty frightening, just take the ", Color.white);
+                    WINDOW.addTextToWindow(item, Color.pink);
+                    WINDOW.addTextToWindow(" and don't hurt me!\n", Color.white);
                     customer.buyItem(item, 0);
                 }
                 else
-                    System.out.println("I'm afraid you don't have enough gold, come back when you're a little, mmmm richer.");
+                    WINDOW.addTextToWindow("I'm afraid you don't have enough gold, come back when you're a little, mmmm richer.", Color.white);
             }
-            else
-                System.out.println("It seems you already have a " + Colors.PURPLE + item + Colors.RESET + ".");
+            else {
+                WINDOW.addTextToWindow("It seems you already have a ", Color.white);
+                WINDOW.addTextToWindow(item, Color.pink);
+                WINDOW.addTextToWindow(".", Color.white);
+            }
         }
     }
 
@@ -137,9 +166,9 @@ public class Shop {
     public void sellItem(String item) {
         int buyBackPrice = checkMarketPrice(item, false);
         if (customer.sellItem(item, buyBackPrice))
-            System.out.println("Pleasure doin' business with you.");
+            WINDOW.addTextToWindow("Pleasure doin' business with you.\n", Color.white);
         else
-            System.out.println("Stop stringin' me along!");
+            WINDOW.addTextToWindow("Stop stringin' me along!\n", Color.white);
     }
 
     /**
