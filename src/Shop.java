@@ -65,7 +65,7 @@ public class Shop {
             System.out.println("You currently have the following items: " + customer.getInventory());
             String item = SCANNER.nextLine().toLowerCase();
             int cost = checkMarketPrice(item, false);
-            if (cost == -1)
+            if (cost == 0 || cost == -1)
                 System.out.println("We don't want none of those.");
             else {
                 System.out.print("It'll get you " + Colors.YELLOW + cost + " gold" + Colors.RESET + ". Sell it (y/n)? ");

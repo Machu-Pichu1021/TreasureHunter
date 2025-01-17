@@ -135,6 +135,10 @@ public class Hunter {
     public String getInventory() {
         String printableKit = "";
 
+        if(kitIsEmpty()){
+            return "";
+        }
+
         for (String item : kit) {
             if (item != null) {
                 if (item.equals("katana"))

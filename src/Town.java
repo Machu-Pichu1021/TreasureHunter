@@ -88,6 +88,7 @@ public class Town {
      * @return true if the Hunter was able to leave town.
      */
     public boolean leaveTown() {
+        printMessage = "";
         boolean canLeaveTown = terrain.canCrossTerrain(hunter);
         if (canLeaveTown) {
             String item = terrain.getNeededItem();
@@ -130,6 +131,7 @@ public class Town {
      * The tougher the town, the easier it is to find a fight, and the harder it is to win one.
      */
     public void lookForTrouble() {
+        printMessage = "";
         double noTroubleChance;
         double fightDifficulty;
         if (toughTown) {
@@ -213,6 +215,7 @@ public class Town {
     }
 
     public String infoString() {
+        printMessage = "";
         return "This nice little town is surrounded by " + terrain.getTerrainName() + ".";
     }
 
