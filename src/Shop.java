@@ -52,9 +52,8 @@ public class Shop {
             WINDOW.addTextToWindow("Welcome to the shop! We have the finest wares in town.\n", Color.white);
             WINDOW.addTextToWindow("Currently we have the following items:\n", Color.white);
             inventory();
-            WINDOW.addTextToWindow("What're you lookin' to buy?", Color.white);
+            WINDOW.addTextToWindow("What're you lookin' to buy?\n", Color.white);
             String item = SCANNER.nextLine().toLowerCase();
-            WINDOW.clear();
             int cost = checkMarketPrice(item, true);
             if (cost == -1)
                 WINDOW.addTextToWindow("We ain't got none of those.\n", Color.white);
@@ -84,7 +83,6 @@ public class Shop {
                     sellItem(item);
             }
         }
-        WINDOW.clear();
         WINDOW.addTextToWindow("You left the shop.\n", Color.white);
     }
 
@@ -122,6 +120,7 @@ public class Shop {
      * @param item The item being bought.
      */
     public void buyItem(String item) {
+        WINDOW.clear();
         int costOfItem = checkMarketPrice(item, true);
         if (customer.buyItem(item, costOfItem)) {
             if (customer.hasItemInKit("katana")) {
@@ -148,12 +147,12 @@ public class Shop {
                     customer.buyItem(item, 0);
                 }
                 else
-                    WINDOW.addTextToWindow("I'm afraid you don't have enough gold, come back when you're a little, mmmm richer.", Color.white);
+                    WINDOW.addTextToWindow("I'm afraid you don't have enough gold, come back when you're a little, mmmm richer.\n", Color.white);
             }
             else {
                 WINDOW.addTextToWindow("It seems you already have a ", Color.white);
                 WINDOW.addTextToWindow(item, Color.pink);
-                WINDOW.addTextToWindow(".", Color.white);
+                WINDOW.addTextToWindow(".\n", Color.white);
             }
         }
     }
@@ -164,6 +163,7 @@ public class Shop {
      * @param item The item being sold.
      */
     public void sellItem(String item) {
+        WINDOW.clear();
         int buyBackPrice = checkMarketPrice(item, false);
         if (customer.sellItem(item, buyBackPrice))
             WINDOW.addTextToWindow("Pleasure doin' business with you.\n", Color.white);

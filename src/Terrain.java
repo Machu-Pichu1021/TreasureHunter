@@ -1,9 +1,13 @@
+import java.awt.*;
+
 /**
  * The Terrain class is designed to represent the zones between the towns in the Treasure Hunter game.
  * This code has been adapted from Ivan Turner's original program -- thank you, Mr. Turner!
  */
 
 public class Terrain {
+    private static OutputWindow WINDOW;
+
     // instance variables
     private String terrainName;
     private String neededItem;
@@ -15,20 +19,22 @@ public class Terrain {
      * @param name The name of the zone.
      * @param item The item needed in order to cross the zone.
      */
-    public Terrain(String name, String item) {
+    public Terrain(String name, String item, OutputWindow window) {
         terrainName = name;
         neededItem = item.toLowerCase();
         secondaryItem = null;
+        WINDOW = window;
     }
-    public Terrain(String name, String item, String altItem) {
+    public Terrain(String name, String item, String altItem, OutputWindow window) {
         terrainName = name;
         neededItem = item.toLowerCase();
         secondaryItem = altItem.toLowerCase();
+        WINDOW = window;
     }
 
     // accessors
     public String getTerrainName() {
-        return Colors.CYAN + terrainName + Colors.RESET;
+        return terrainName;
     }
 
     public String getNeededItem() {
@@ -53,8 +59,11 @@ public class Terrain {
     /**
      * @return A string representation of the terrain and item to cross it.
      */
-    public String infoString() {
-        return "You are surrounded by " + Colors.CYAN + terrainName + Colors.RESET + " which needs a(n) " + Colors.PURPLE +
-                neededItem + Colors.RESET + " to cross.";
+    public void infoString() {
+        WINDOW.addTextToWindow("You are surrounded by ", Color.white);
+        WINDOW.addTextToWindow(terrainName, Color.cyan);
+        WINDOW.addTextToWindow(" which needs (a) ", Color.white);
+        WINDOW.addTextToWindow(neededItem, Color.pink);
+        WINDOW.addTextToWindow(" to cross.\n", Color.white);
     }
 }

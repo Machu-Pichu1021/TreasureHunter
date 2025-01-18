@@ -163,9 +163,10 @@ public class Hunter {
         if (!treasureInventoryIsEmpty()) {
             WINDOW.addTextToWindow("\nTreasure Collected: ", Color.white);
             printTreasureInventory();
+            WINDOW.addTextToWindow("\n", Color.white);
         }
         else
-            WINDOW.addTextToWindow("\nTreasure Collected: None", Color.white);
+            WINDOW.addTextToWindow("\nTreasure Collected: None\n", Color.white);
     }
 
     /**

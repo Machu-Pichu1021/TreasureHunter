@@ -65,7 +65,7 @@ public class TreasureHunter {
         WINDOW.clear();
         switch (diff) {
             case "test" -> {
-                WINDOW.addTextToWindow("Test mode activated.", Color.white);
+                WINDOW.addTextToWindow("Test mode activated.\n", Color.white);
                 hunter = new Hunter(name, 100, false, WINDOW);
                 hunter.buyItem("water", 0);
                 hunter.buyItem("rope", 0);
@@ -76,28 +76,28 @@ public class TreasureHunter {
                 hunter.buyItem("shovel", 0);
             }
             case ("test lose") -> {
-                WINDOW.addTextToWindow("Test Lose activated.", Color.white);
+                WINDOW.addTextToWindow("Test Lose activated.\n", Color.white);
                 hunter = new Hunter(name, 0, false, WINDOW);
                 hardMode = true;
             }
             case "s" -> {
-                WINDOW.addTextToWindow("Hello, Samurai. It is an honor to see you.", Color.white);
+                WINDOW.addTextToWindow("Hello, Samurai. It is an honor to see you.\n", Color.white);
                 samurai = true;
                 hardMode = true;
                 hunter = new Hunter(name, 20, true, WINDOW);
             }
             case "h" -> {
-                WINDOW.addTextToWindow("Hard Mode it is then. Prepare for a challenge.", Color.red);
+                WINDOW.addTextToWindow("Hard Mode it is then. Prepare for a challenge.\n", Color.red);
                 hardMode = true;
             }
-            case "n" -> WINDOW.addTextToWindow("Normal Mode. Good luck adventurer.", Color.orange);
+            case "n" -> WINDOW.addTextToWindow("Normal Mode. Good luck adventurer.\n", Color.orange);
             case "e" -> {
-                WINDOW.addTextToWindow("Easy Mode. This be your first time?", Color.green);
+                WINDOW.addTextToWindow("Easy Mode. This be your first time?\n", Color.green);
                 hunter = new Hunter(name, STARTING_GOLD * 2, false, WINDOW);
                 easyMode = true;
             }
             default ->
-                    WINDOW.addTextToWindow("Uhhh... I'm just gonna give you Normal Mode...", Color.orange);
+                    WINDOW.addTextToWindow("Uhhh... I'm just gonna give you Normal Mode...\n", Color.orange);
         }
     }
 
@@ -177,9 +177,10 @@ public class TreasureHunter {
      * @param choice The action to process.
      */
     private void processChoice(String choice) {
+        WINDOW.clear();
         switch (choice) {
             case "b", "s" -> currentTown.enterShop(choice);
-            case "e" -> System.out.println(currentTown.getTerrain().infoString());
+            case "e" -> currentTown.getTerrain().infoString();
             case "m" -> {
                 if (currentTown.leaveTown()) {
                     // This town is going away so print its news ahead of time.
@@ -192,7 +193,8 @@ public class TreasureHunter {
             case "d" -> currentTown.digForGold();
             case "x" -> {
                 WINDOW.clear();
-                WINDOW.addTextToWindow("Fare thee well, " + hunter.getHunterName() + "!", Color.white);
+                WINDOW.addTextToWindow("Fare thee well, " + hunter.getHunterName() + "!\n", Color.white);
+                WINDOW.addTextToWindow("Close the window to exit...", Color.white);
             }
             default -> {
                 WINDOW.clear();
